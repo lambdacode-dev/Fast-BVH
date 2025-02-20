@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(gnu_cxxflags -Wall -Wextra -Werror -Wfatal-errors)
 add_compile_options(-w)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   list(APPEND gnu_cxxflags -ffast-math)
