@@ -9,6 +9,7 @@ option(FASTBVH_BUILD_BENCHMARK "Whether or not to build the benchmark." OFF)
 set(CMAKE_CXX_STANDARD 14)
 
 set(gnu_cxxflags -Wall -Wextra -Werror -Wfatal-errors)
+add_compile_options(-w)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   list(APPEND gnu_cxxflags -ffast-math)
