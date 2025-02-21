@@ -97,15 +97,12 @@ int main() {
   SphereIntersector<float> intersector;
   Traverser<float, Sphere<float>, decltype(intersector)> traverser(bvh, intersector);
 
-  auto trace_kernel = [traverser](const Ray<float>& ray) {
-    auto isect = traverser.traverse(ray);
-    if (isect) {
-      // Just for fun, we'll make the color based on the normal
-      return Vector3<float>{std::fabs(isect.normal.x), std::fabs(isect.normal.y), std::fabs(isect.normal.z)};
-    } else {
-      return Vector3<float>{0, 0, 0};
-    }
-  };
+    auto trace_kernel = [traverser](const Ray<float>& ray) {
+        auto isect = traverser.traverse(ray);
+        auto dist = sqrt(isect.t);
+        // Just for fun, we'll make the color based on the reciprocal of distance
+        return Vector3<float>{0.18f/dist, 0.18f/dist, 0.18f/dist};
+    };
 
   constexpr std::size_t width = 2048;
   constexpr std::size_t height = 2048;
