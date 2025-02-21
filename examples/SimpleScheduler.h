@@ -63,7 +63,7 @@ class SimpleScheduler final {
         auto v = (img_y_res - 1 - y + Float(0.5f)) / (Float)(img_y_res - 1) - 0.5f;
 
         // This is only valid for square aspect ratio images
-        Ray<float> ray(camera_position, normalize(camera_u * u + camera_v * v + camera_dir * fov));
+        Ray<float> ray(camera_position + camera_u * u + camera_v * v + camera_dir * fov, normalize(camera_u * u + camera_v * v + camera_dir * fov));
 
         auto color = tracer(ray);
 
