@@ -4,6 +4,7 @@
 #include <FastBVH/Vector3.h>
 
 #include <cstdint>
+#include <algorithm>
 #include <utility>
 
 namespace FastBVH {
@@ -87,47 +88,25 @@ struct BBox final {
   }
 };
 
+// Bound squared distance from ray origin to this box.
+// Lower/upper bound stored to tnear/tfar.
+// Always return true.
 template <typename Float>
 bool BBox<Float>::intersect(const Ray<Float>& ray, Float* tnear, Float* tfar) const noexcept {
-  Float tmin = (min.x - ray.o.x) * ray.inv_d.x;
-  Float tmax = (max.x - ray.o.x) * ray.inv_d.x;
+    auto const& o = ray.o;
+    Vector3<Float> near, far;
+    for(int i = 0; i < 3; ++i) {
+        bool minlarger = min[i] > o[i];
+        bool maxlarger = max[i] > o[i];
+        Float o2min = fabs(min[i] - o[i]); 
+        Float o2max = fabs(max[i] - o[i]); 
+        far[i] = std::max(o2min, o2max);
+        near[i] = (minlarger != maxlarger) ? 0.0f : std::min(o2min, o2max);
+    }
+    *tnear = dot(near, near);
+    *tfar = dot(far, far);
 
-  if (tmin > tmax) {
-    std::swap(tmin, tmax);
-  }
-
-  Float tymin = (min.y - ray.o.y) * ray.inv_d.y;
-  Float tymax = (max.y - ray.o.y) * ray.inv_d.y;
-
-  if (tymin > tymax) {
-    std::swap(tymin, tymax);
-  }
-
-  if ((tmin > tymax) || (tymin > tmax)) {
-    return false;
-  }
-
-  tmin = std::fmax(tymin, tmin);
-  tmax = std::fmin(tymax, tmax);
-
-  Float tzmin = (min.z - ray.o.z) * ray.inv_d.z;
-  Float tzmax = (max.z - ray.o.z) * ray.inv_d.z;
-
-  if (tzmin > tzmax) {
-    std::swap(tzmin, tzmax);
-  }
-
-  if ((tmin > tzmax) || (tzmin > tmax)) {
-    return false;
-  }
-
-  tmin = std::fmax(tzmin, tmin);
-  tmax = std::fmin(tzmax, tmax);
-
-  *tnear = tmin;
-  *tfar = tmax;
-
-  return true;
+    return true;
 }
 
 template <typename Float>
