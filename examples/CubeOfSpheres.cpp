@@ -49,40 +49,22 @@ class SphereBoxConverter final {
   }
 };
 
-//! \brief Used for calculating the intersections between rays and spheres.
+//! \brief Used for calculating the squared distance between ray orgins and spheres.
 //! \tparam Float The floating point type of the spheres and rays.
 template <typename Float>
 class SphereIntersector final {
  public:
-  //! Indicates if a ray and a sphere intersect.
+  //! Compute squared distance between ray origin and the sphere primitive
   //! \param sphere The sphere to check intersection for.
-  //! \param ray The ray being traced.
-  //! \return An instance of @ref FastBVH::Intersection that contains the intersection
-  //! data and indicates whether or not there was actually an intersection.
-  Intersection<Float, Sphere<Float>> operator()(const Sphere<Float>& sphere, const Ray<Float>& ray) const noexcept {
-    const auto& center = sphere.center;
-    const auto& r2 = sphere.r2;
+  //! \param ray The ray whose origin is being inquired for distance to the sphere
+  //! \return An instance of @ref FastBVH::Intersection that contains the distance
+  //! data.
+    Intersection<Float, Sphere<Float>> operator()(const Sphere<Float>& sphere, const Ray<Float>& ray) const noexcept {
+        auto oc = length(sphere.center - ray.o);
+        auto os = fabs(oc - sphere.r);
 
-    auto s = center - ray.o;
-    auto sd = dot(s, ray.d);
-    auto ss = dot(s, s);
-
-    // Compute discriminant
-    auto disc = sd * sd - ss + r2;
-
-    // Complex values: No intersection
-    if (disc < 0.f) {
-      return Intersection<Float, Sphere<Float>>{};
+        return Intersection<Float, Sphere<Float>>{os*os, &sphere};
     }
-
-    // There is a positive and negative branch to the intersection equation. Assuming we are always outside of the
-    // sphere, then the first intersection is the negative branch.
-    auto t = sd - std::sqrt(disc);
-    auto hit_pos = ray.o + (ray.d * t);
-    auto normal = normalize(hit_pos - sphere.center);
-
-    return Intersection<Float, Sphere<Float>>{t, &sphere, normal};
-  }
 };
 
 }  // namespace
