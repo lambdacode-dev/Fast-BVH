@@ -1,5 +1,3 @@
-# Adapt Brandon Pelfrey's Fast-BVH ray tracer for point-model distance inquiry
-
 Code: Fast-BVH, an optimized Bounding Volume Hierarchy
 Author: Brandon Pelfrey (brandonpelfrey@gmail.com)
         Borrowed AABB Intersection code referenced in BBox.cpp

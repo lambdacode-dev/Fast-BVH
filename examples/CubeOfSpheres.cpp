@@ -53,12 +53,12 @@ class SphereBoxConverter final {
 //! \tparam Float The floating point type of the spheres and rays.
 template <typename Float>
 class SphereIntersector final {
- public:
-  //! Compute squared distance between ray origin and the sphere primitive
-  //! \param sphere The sphere to check intersection for.
-  //! \param ray The ray whose origin is being inquired for distance to the sphere
-  //! \return An instance of @ref FastBVH::Intersection that contains the distance
-  //! data.
+public:
+    //! Compute squared distance between ray origin and the sphere primitive
+    //! \param sphere The sphere to check intersection for.
+    //! \param ray The ray whose origin is being inquired for distance to the sphere
+    //! \return An instance of @ref FastBVH::Intersection that contains the distance
+    //! data.
     Intersection<Float, Sphere<Float>> operator()(const Sphere<Float>& sphere, const Ray<Float>& ray) const noexcept {
         auto oc = length(sphere.center - ray.o);
         auto os = fabs(oc - sphere.r);
@@ -104,8 +104,8 @@ int main() {
         return Vector3<float>{0.18f/dist, 0.18f/dist, 0.18f/dist};
     };
 
-  constexpr std::size_t width = 2048;
-  constexpr std::size_t height = 2048;
+  constexpr std::size_t width = 512;
+  constexpr std::size_t height = 512;
 
   printf("Rendering image (%ux%u)...\n", (unsigned int)width, (unsigned int)height);
 
