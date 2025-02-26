@@ -1,3 +1,28 @@
+int parent[]; 
+
+int find(int i) {
+    if(parent[i] == i) return i;
+    return (parent[i] = find(parent[i]));
+}
+
+void union(int i, int j) {
+    parent[find(i)] = find(j);
+}
+
+void build_infill_volumes() {
+    for(int layer = 0, id = 0; layer < total_layers; layer++) {
+        for(int i = 0; i < infill_areas[layer].size(); ++i, ++id) {
+            parent[id] = id;  
+            for(int j = 0; j < infill_areas[layer-1].size(); ++j) {
+                if( !intersection(id, id_j).empty() ) {
+                    union(id, id_j);
+                }
+            }
+        }
+    }
+}
+
+
 #pragma once
 
 #include <FastBVH/Ray.h>
