@@ -1,4 +1,12 @@
-int parent[]; 
+float A[], V[];
+
+void accumulate_volume_and_area_metrics() {
+    for(auto id: all_infill_polygon_areas_for_all_layers) {
+        auto regionId = find(id);    
+        A[regionId] += polygon_perimeter(id) * layer_height;
+        V[regionId] += polygon_area(id) * layer_height;
+    }
+}
 
 int find(int i) {
     if(parent[i] == i) return i;
